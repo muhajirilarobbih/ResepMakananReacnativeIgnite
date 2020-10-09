@@ -17,7 +17,7 @@ export const ResepStoreModel = types
   .actions(self => ({
     saveResep: (resepSnapshots : ResepSnapshot[]) => {
       const resepModels: Resep[] = resepSnapshots.map(c => ResepModel.create(c))
-      self.resepsstore.replace(resepModels) 
+      self.resepsstore.push(...resepModels) 
     } ,
     setDetail(resep){
       self.detailResep = resep
@@ -26,9 +26,9 @@ export const ResepStoreModel = types
   .actions(self => ({
     getReseps: flow(function*(){
       const result: GetResepsResult = yield self.environment.api.getReseps()
-      self.resepsstore.clear()
       if(result.kind == 'ok'){
-        self.saveResep(result.reseps)
+        console.log(result);
+        self.resepsstore.push(...result.reseps)
       } else {
         self.resepsstore.clear()
         __DEV__ && console.tron.log(result.kind)

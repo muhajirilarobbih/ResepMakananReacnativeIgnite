@@ -1,0 +1,15 @@
+export const fontSizes = {
+    caption1: 12,
+    caption2: 14,
+    tiny: 12,
+    bodyText1: 16,
+    bodyText2: 18,
+    bodyText3: 20,
+    bodyText4: 22,
+    h1: 34,
+    h2: 32,
+    h3: 24,
+    h4: 28,
+    h5: 28,
+    h6: 26,
+}

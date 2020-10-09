@@ -15,6 +15,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { NavigationContainerRef } from "@react-navigation/native"
 import { SafeAreaProvider, initialWindowSafeAreaInsets } from "react-native-safe-area-context"
 import * as storage from "./utils/storage"
+import * as material from "@eva-design/material"
 import {
   useBackButtonHandler,
   RootNavigator,
@@ -28,6 +29,12 @@ import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
 import { enableScreens } from "react-native-screens"
+import { Observer } from "mobx-react-lite"
+import { RnKittenStyles } from "./theme/rn-kitten-styles"
+import customMapping from "./custom-mapping"
+import { StatusBar, View } from "react-native"
+import { ApplicationProvider } from "@ui-kitten/components"
+import { RootModalScreen } from "./screens/root-modal-screen/root-modal-screen"
 enableScreens()
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
@@ -63,11 +70,66 @@ function App() {
   return (
     <RootStoreProvider value={rootStore}>
       <SafeAreaProvider initialSafeAreaInsets={initialWindowSafeAreaInsets}>
-        <RootNavigator
+        {/* <RootNavigator
           ref={navigationRef}
           initialState={initialNavigationState}
           onStateChange={onNavigationStateChange}
-        />
+        /> */}
+        <Observer
+          render={() => {
+            const dark = Object.assign(material.dark, RnKittenStyles)
+            const light = Object.assign(material.light, RnKittenStyles)
+
+            const providerAtts = {
+              ...material,
+              customMapping: customMapping,
+            }
+
+            return (
+              // @ts-ignore
+              <ApplicationProvider
+                {...providerAtts}
+                theme={dark}>
+                <View style={{
+                  flex: 1,
+                }}>
+                  <View style={{
+                    height: '100%',
+                    width: '100%',
+                    position: 'absolute',
+                    zIndex: 1,
+                  }}>
+                    <View style={{
+                      flex: 1
+                    }}>
+                      {/* <StatusBar barStyle={isDarkTheme() ? "light-content" : "dark-content"} /> */}
+                      <StatusBar
+                        barStyle='dark-content'
+                        backgroundColor='transparent'
+                        translucent={true} />
+                      <RootNavigator
+                        ref={navigationRef}
+                        initialState={initialNavigationState}
+                        onStateChange={onNavigationStateChange} />
+                    </View>
+                  </View>
+                  <Observer>
+                    {() => {
+                      return <View style={{
+                        height: '100%',
+                        width: '100%',
+                        position: 'absolute',
+                        backgroundColor: 'transparent',
+                        zIndex: rootStore.modalStore.modals.length ? 2 : 0,
+                      }}>
+                        <RootModalScreen />
+                      </View>
+                    }}
+                  </Observer>
+                </View>
+              </ApplicationProvider>
+            )
+          }} />
       </SafeAreaProvider>
     </RootStoreProvider>
   )

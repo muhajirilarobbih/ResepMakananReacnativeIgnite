@@ -1,3 +1,6 @@
 export * from "./welcome-screen/welcome-screen"
 export * from "./demo-screen/demo-screen"
 export * from "./detail-screen/detail-screen"
+export * from "./splash-screen/splash-screen"
+export * from "./login-screen/login-screen"
+export * from "./resepscreen-screen/resepscreen-screen"

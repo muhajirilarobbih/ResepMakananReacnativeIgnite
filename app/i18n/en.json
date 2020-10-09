@@ -2,7 +2,14 @@
   "common": {
     "ok": "OK!",
     "cancel": "Cancel",
-    "back": "Back"
+    "back": "Back",
+    "app_name_part1": "APL",
+    "app_name_part2": "",
+    "copyright": "®2020 APL",
+    "binus_copyright": "®2020 APL",
+    "update": "Update",
+    "refresh": "Refresh",
+    "rootedMessage": "We identified that your device is rooted, please use device which hasn't been rooted"
   },
   "errors": {
     "invalidEmail": "Invalid email address."

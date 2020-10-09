@@ -7,7 +7,7 @@
 import React from "react"
 
 import { createNativeStackNavigator } from "react-native-screens/native-stack"
-import { WelcomeScreen, DemoScreen, DetailScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DetailScreen, SpalshScreen, ResepscreenScreen } from "../screens"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -22,9 +22,11 @@ import { WelcomeScreen, DemoScreen, DetailScreen } from "../screens"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type PrimaryParamList = {
+  splash: undefined
   welcome: undefined
   demo: undefined
   detail: undefined
+  resep: undefined
 }
 
 // Documentation: https://github.com/software-mansion/react-native-screens/tree/master/native-stack
@@ -33,14 +35,17 @@ const Stack = createNativeStackNavigator<PrimaryParamList>()
 export function PrimaryNavigator() {
   return (
     <Stack.Navigator
+      initialRouteName="splash"
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,
       }}
     >
+      <Stack.Screen name="splash" component={SpalshScreen} />
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} />
       <Stack.Screen name="detail" component={DetailScreen} />
+      <Stack.Screen name="resep" component={ResepscreenScreen} />
     </Stack.Navigator>
   )
 }

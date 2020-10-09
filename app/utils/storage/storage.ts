@@ -77,3 +77,13 @@ export async function clear(): Promise<void> {
     await AsyncStorage.clear()
   } catch {}
 }
+
+export const containsStorage = async (key: string) => {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const contains = keys.find(e => e === key) !== undefined
+    return contains;
+  } catch {
+    return false;
+  }
+}

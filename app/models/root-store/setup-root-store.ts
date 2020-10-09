@@ -30,18 +30,18 @@ export async function setupRootStore() {
 
   // prepare the environment that will be associated with the RootStore.
   const env = await createEnvironment()
-  try {
-    // load data from storage
-    data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
-    rootStore = RootStoreModel.create(data, env)
-  } catch (e) {
+  // try {
+  //   // load data from storage
+  //   data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
+  //   rootStore = RootStoreModel.create(data, env)
+  // } catch (e) {
     // if there's any problems loading, then let's at least fallback to an empty state
     // instead of crashing.
     rootStore = RootStoreModel.create({}, env)
 
     // but please inform us what happened
-    __DEV__ && console.tron.error(e.message, null)
-  }
+  //   __DEV__ && console.tron.error(e.message, null)
+  // }
 
   // reactotron logging
   if (__DEV__) {
@@ -49,7 +49,7 @@ export async function setupRootStore() {
   }
 
   // track changes & save to storage
-  onSnapshot(rootStore, (snapshot) => storage.save(ROOT_STATE_STORAGE_KEY, snapshot))
+  onSnapshot(rootStore, (snapshot) => storage.save("", snapshot))
 
   return rootStore
 }

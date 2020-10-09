@@ -1,9 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import { View, Image, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
 import { Button, Header, Screen, Text, Wallpaper } from "../../components"
 import { color, spacing, typography } from "../../theme"
+import { useStores } from "../../models"
+import { construct } from "ramda"
 const bowserLogo = require("./png-recipe.png")
 
 const FULL: ViewStyle = { flex: 1 }
@@ -78,7 +80,7 @@ const FOOTER_CONTENT: ViewStyle = {
 
 export const WelcomeScreen = observer(function WelcomeScreen() {
   const navigation = useNavigation()
-  const nextScreen = () => navigation.navigate("demo")
+  const nextScreen = () => navigation.navigate("resep")
 
   return (
     <View style={FULL}>

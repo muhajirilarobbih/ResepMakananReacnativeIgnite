@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react"
-import { Image, ImageStyle, TextStyle, View, ViewStyle, FlatList, TouchableOpacity } from "react-native"
-import { ParamListBase, useNavigation } from "@react-navigation/native"
+import React, { useEffect } from "react"
 import { observer } from "mobx-react-lite"
-import { Header, Text, Screen, Wallpaper } from "../../components"
+import { FlatList, Image, ImageStyle, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Header, Screen, Text, Wallpaper } from "../../components"
+// import { useNavigation } from "@react-navigation/native"
+// import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { useStores } from "../../models"
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript"
-export const logoIgnite = require("./logo-ignite.png")
-export const heart = require("./heart.png")
+import { useNavigation } from "@react-navigation/native"
+
+const ROOT: ViewStyle = {
+  backgroundColor: color.palette.black,
+  flex: 1,
+}
 
 const FULL: ViewStyle = { flex: 1 }
 const CONTAINER: ViewStyle = {
@@ -47,23 +51,23 @@ const RESEP_NAME: TextStyle = {
   fontSize : 20
 }
 
-export interface DemoScreenProps {
-  navigation: NativeStackNavigationProp<ParamListBase>
-}
-
-export const DemoScreen: React.FunctionComponent<DemoScreenProps> = (props) => {
+export const ResepscreenScreen = observer(function ResepscreenScreen() {
+  // Pull in one of our MST stores
+  // const { someStore, anotherStore } = useStores()
+  // OR
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
-  const rootResep = useStores()
-  const getResepRefresh= () => {
-    rootResep.rootresepStore.getReseps()
-  }
-  React.useEffect(() => {
-    getResepRefresh()
-  }, [])
+  const rootStore = useStores()
+
+  useEffect(() => {
+    rootStore.rootresepStore.getReseps()
+  })
+
+  // Pull in navigation via hook
+  // const navigation = useNavigation()
   return (
     <View style={FULL}>
-      <Wallpaper />
+      <Wallpaper/>
       <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
         <Header
           headerTx="demoScreen.howTo"
@@ -72,30 +76,21 @@ export const DemoScreen: React.FunctionComponent<DemoScreenProps> = (props) => {
           style={HEADER}
           titleStyle={HEADER_TITLE}
         />
-        <Text style={TITLE} preset="header" >What is you wont</Text>
-        <FlatList 
-          data={rootResep.rootresepStore.resepsstore}
-          renderItem={({item}) => (
+      <Text style={TITLE} preset="header" >What is you wont</Text>
+      <FlatList
+        data={rootStore.rootresepStore.resepsstore}
+        renderItem={({item}) => (
           <TouchableOpacity style={RESEP_ROW} onPress={() => {
-            rootResep.rootresepStore.setDetail(item)
+            rootStore.rootresepStore.setDetail(item)
             navigation.navigate("detail")
           }}>
-            <Image style={RESEP_IMAGE} source ={{uri : item.image}}/>
+            <Image style={RESEP_IMAGE} source={{uri : item.image}}/>
             <Text style={RESEP_NAME}>{item.name}</Text>
           </TouchableOpacity>
-          )}
-        />
-        {/* <View>
-          <Button
-            style={DEMO}
-            textStyle={DEMO_TEXT}
-            tx="demoScreen.reactotron"
-            onPress={demoReactotron}
-          />
-          <Text style={HINT} tx={`demoScreen.${Platform.OS}ReactotronHint`} />
-        </View> */}
-        
+        )}
+      >
+      </FlatList>
       </Screen>
     </View>
   )
-}
+})

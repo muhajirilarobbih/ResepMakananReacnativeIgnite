@@ -35,7 +35,7 @@ const HEADER_TITLE: TextStyle = {
 export const DetailScreen = observer(function DetailScreen() {
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
-  const { resepStore } = useStores()
+  const { rootresepStore } = useStores()
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // OR
@@ -54,9 +54,9 @@ export const DetailScreen = observer(function DetailScreen() {
         style={HEADER}
         titleStyle={HEADER_TITLE}
       />
-      <Image source={{uri : resepStore.detailResep.image}} style={{height: 300 , resizeMode: "stretch" , margin: 5}}/>
-      <Text style={{fontSize: 30, fontWeight: "bold"}} preset="header">{resepStore.detailResep.name}</Text>
-      <Text>{resepStore.detailResep.desc}</Text>
+      <Image source={{uri : rootresepStore.detailResep.image}} style={{height: 300 , resizeMode: "stretch" , margin: 5}}/>
+      <Text style={{fontSize: 30, fontWeight: "bold"}} preset="header">{rootresepStore.detailResep.name}</Text>
+      <Text>{rootresepStore.detailResep.desc}</Text>
     </Screen>
     </View>
     

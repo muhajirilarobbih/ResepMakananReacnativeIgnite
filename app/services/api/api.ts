@@ -3,6 +3,8 @@ import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import * as Types from "./api.types"
 import { ResepSnapshot } from "../../models/resep/resep"
+import { getUser } from "../../utils/storage/storage.user"
+import { logger } from "../../app-config"
 
 /**
  * Manages all requests to the API.
@@ -15,6 +17,8 @@ const convertResep = (raw: any): ResepSnapshot => {
     desc: raw.desc
   }
 }
+
+export type WrapRequestDelegate<T> = (apiInstance: ApisauceInstance) => Promise<T>
 
 
 export class Api {
@@ -53,6 +57,25 @@ export class Api {
         Accept: "application/json",
       },
     })
+  }
+
+  async wrapRequest<T>(value: WrapRequestDelegate<T>): Promise<T> {
+    const user = await getUser()
+    if (user !== null) {
+      this.apisauce.setHeader('Authorization', `${user.tokenScheme} ${user.token}`)
+    }
+
+    const r = await value(this.apisauce)
+    logger.debug(`wrapRequest: ${JSON.stringify(r, undefined, 4)}`)
+    const rAny: any = r
+    if (rAny.ok !== true) {
+      throw 'Something happened'
+    }
+
+    if (!rAny.data.isSuccess) {
+      throw rAny.data.message
+    }
+    return r
   }
 
   /**
@@ -130,4 +153,22 @@ export class Api {
       return { kind: "bad-data" }
     }
   }
+
+  async login(request: Types.LoginRequest): Promise<Types.BaseResponse<Types.LoginResponse>> {
+    const r = await this.wrapRequest((api) => {
+      return api.post<Types.BaseResponse<Types.LoginResponse>>(`/api/auth/login`, request)
+    })
+    return r.data
+  }
+
+  async getAppVersion(login: Types.LoginResponse): Promise<Types.BaseResponse<Types.AppVersionResponse>> {
+    const response = await this.apisauce.get<Types.BaseResponse<Types.AppVersionResponse>>('/api/general/appversion', {}, {
+      headers: {
+        Authorization: `${login.tokenScheme} ${login.token}`
+      },
+    })
+    return response.data
+  }
 }
+
+export const ApiInstance = new Api()
